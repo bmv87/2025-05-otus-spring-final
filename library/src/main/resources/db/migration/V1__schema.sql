@@ -1,8 +1,8 @@
 create table users (
     id bigserial NOT NULL,
+    username varchar(30) NOT NULL,
     first_name varchar(100) NOT NULL,
     last_name varchar(150) NOT NULL,
-    username varchar(100) NOT NULL,
     middle_name varchar(100),
     birthday date NOT NULL,
     created_at timestamp NOT NULL DEFAULT NOW(),
@@ -54,6 +54,13 @@ create table books (
     created_by integer references users(id) NOT NULL,
     created_at timestamp NOT NULL DEFAULT NOW(),
     primary key (id)
+);
+
+create table books_authors (
+    book_id bigint references books(id) on delete cascade NOT NULL,
+    author_id bigint references authors(id) on delete cascade NOT NULL,
+    created_at timestamp NOT NULL DEFAULT NOW(),
+    primary key (book_id, author_id)
 );
 
 create table books_sections (
