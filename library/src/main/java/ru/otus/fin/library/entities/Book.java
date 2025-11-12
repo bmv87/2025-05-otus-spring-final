@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 import org.hibernate.annotations.BatchSize;
 
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.List;
                         @NamedAttributeNode("sections"),
                 })
 })
+@FieldNameConstants
 public class Book {
 
     @Id

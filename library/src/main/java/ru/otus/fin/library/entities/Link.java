@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "links")
+@FieldNameConstants
 public class Link {
 
     @Id
