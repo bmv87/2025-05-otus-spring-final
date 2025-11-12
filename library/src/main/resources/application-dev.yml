@@ -1,2 +1,2 @@
 cors:
-  urls: http://localhost:3000
+  urls: ${CORS_URLS}
