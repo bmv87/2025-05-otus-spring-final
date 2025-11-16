@@ -1,4 +1,4 @@
-insert into users(username, first_name, last_name, middle_name, birthday)
+ insert into users(username, first_name, last_name, middle_name, birthday)
 values ('admin', 'Mary',  'B', 'V', '2012-08-31'),
        ('reader1', 'Tony',  'T', 'S', '1977-08-31'),
        ('reader2', 'Bill',  'F', 'C', '2002-08-31');

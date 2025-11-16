@@ -1,16 +1,16 @@
+server:
+  port: 8686
 spring:
   application:
     name: library
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE}
   data:
     rest:
       default-media-type: application/json
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL}/${POSTGRES_DB_NAME}}
-    username: ${POSTGRES_DB_USERNAME}
-    password: ${POSTGRES_DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5455/library
+    username: postgres
+    password: postgres
   sql:
     init:
       mode: never
@@ -26,6 +26,26 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  messages:
+    baseName: messages
+    encoding: UTF-8
+    fallbackToSystemLocale: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:5443/realms/library
+    client:
+      registration:
+        keycloak:
+          client-id: otus_library
+          client-secret: r2bQaOxF6jKMlvPYVLWvMt2llY69bP26
+          authorization-grant-type: authorization_code
+          scope: openid-connect
+      provider:
+        keycloak:
+          issuer-uri: http://localhost:5443/realms/library
+          user-name-attribute: preferred_username
 logging:
   logging:
     level:
@@ -34,15 +54,18 @@ logging:
     name: ../logs/hw.log
 
 cors:
-  urls: ${CORS_URLS}
+  urls: http://localhost:3000
+
+defaults:
+  locale: ru-RU
 
 minio:
-  url: ${MINIO_URL}
-  access-key: ${MINIO_ACCESS_KEY}
-  secret-key: ${MINIO_SECRET_KEY}
-  bucket-name: ${MINIO_BUCKET_NAME}
+  url: http://localhost:9000
+  access-key: admin
+  secret-key: admin123
+  bucket-name: library
   image-size: 10485760
-  file-size: 1073741824
+  file-size: 104857600
 
 
 

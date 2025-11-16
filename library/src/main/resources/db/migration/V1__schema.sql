@@ -27,8 +27,30 @@ create table sections (
     primary key (id)
 );
 
+create table books (
+    id bigserial NOT NULL,
+    title varchar(255) NOT NULL,
+    description varchar(2000),
+    publication_year integer NOT NULL,
+    created_by integer references users(id) NOT NULL,
+    created_at timestamp NOT NULL DEFAULT NOW(),
+    primary key (id)
+);
+
 create table links (
-    id integer NOT NULL,
+    id bigserial NOT NULL,
+    book_id integer references books(id) NOT NULL,
+    type varchar NOT NULL,
+    title varchar(250) NOT NULL,
+    target varchar NOT NULL,
+    created_by integer references users(id) NOT NULL,
+    created_at timestamp NOT NULL DEFAULT NOW(),
+    primary key (id)
+);
+
+create table pictures (
+    id bigserial NOT NULL,
+    book_id integer references books(id) NOT NULL,
     type varchar NOT NULL,
     title varchar(250) NOT NULL,
     target varchar NOT NULL,
@@ -41,16 +63,6 @@ create table authors (
     id bigserial NOT NULL,
     full_name varchar(255) NOT NULL,
     description varchar NOT NULL,
-    created_by integer references users(id) NOT NULL,
-    created_at timestamp NOT NULL DEFAULT NOW(),
-    primary key (id)
-);
-
-create table books (
-    id bigserial NOT NULL,
-    title varchar(255) NOT NULL,
-    description varchar(255),
-    publication_year integer NOT NULL,
     created_by integer references users(id) NOT NULL,
     created_at timestamp NOT NULL DEFAULT NOW(),
     primary key (id)
@@ -75,18 +87,4 @@ create table users_roles (
     role_id bigint references roles(id) on delete cascade NOT NULL,
     created_at timestamp NOT NULL DEFAULT NOW(),
     primary key (user_id, role_id)
-);
-
-create table books_links (
-    book_id bigint references books(id) on delete cascade NOT NULL,
-    link_id  bigint references links(id) on delete cascade NOT NULL,
-    created_at timestamp NOT NULL DEFAULT NOW(),
-    primary key (book_id, link_id)
-);
-
-create table books_pictures (
-     book_id bigint references books(id) on delete cascade NOT NULL,
-     link_id  bigint references links(id) on delete cascade NOT NULL,
-     created_at timestamp NOT NULL DEFAULT NOW(),
-     primary key (book_id, link_id)
 );

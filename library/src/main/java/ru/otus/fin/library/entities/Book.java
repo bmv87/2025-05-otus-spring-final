@@ -1,5 +1,6 @@
 package ru.otus.fin.library.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,12 +37,6 @@ import java.util.List;
                         @NamedAttributeNode("authors"),
                         @NamedAttributeNode("sections"),
                 }),
-        @NamedEntityGraph(name = "books-with-pictures-authors-sections-entity-graph",
-                attributeNodes = {
-                        @NamedAttributeNode("authors"),
-                        @NamedAttributeNode("pictures"),
-                        @NamedAttributeNode("sections"),
-                })
 })
 @FieldNameConstants
 public class Book {
@@ -78,17 +74,13 @@ public class Book {
     private List<Section> sections;
 
     @BatchSize(size = 20)
-    @ManyToMany(targetEntity = Section.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "books_links",
-            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "id"))
-    private List<Link> links;
+    @OneToMany(mappedBy = "book", targetEntity = BookLink.class, fetch = FetchType.LAZY,
+            cascade = {CascadeType.REMOVE, CascadeType.DETACH})
+    private List<BookLink> links;
 
     @BatchSize(size = 20)
-    @ManyToMany(targetEntity = Section.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "books_pictures",
-            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "link_id", referencedColumnName = "id"))
-    private List<Link> pictures;
+    @OneToMany(mappedBy = "book", targetEntity = BookPicture.class, fetch = FetchType.LAZY,
+            cascade = {CascadeType.REMOVE, CascadeType.DETACH})
+    private List<BookPicture> pictures;
 
 }

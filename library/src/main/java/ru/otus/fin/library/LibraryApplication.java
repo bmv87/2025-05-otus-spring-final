@@ -9,7 +9,7 @@ public class LibraryApplication {
     public static void main(String[] args) {
         SpringApplication.run(LibraryApplication.class, args);
         System.out.printf("Чтобы перейти на страницу сайта открывай: %n%s%n",
-                "http://localhost:8080");
+                "http://localhost:8686");
     }
 
 }
