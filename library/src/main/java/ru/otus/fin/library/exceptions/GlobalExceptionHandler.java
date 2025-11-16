@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.otus.fin.library.dto.ErrorDto;
 import ru.otus.fin.library.dto.FieldErrorDto;
+import ru.otus.fin.library.services.LocalizedMessagesService;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    private final LocalizedMessagesService localizedMessagesService;
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -37,20 +40,34 @@ public class GlobalExceptionHandler {
                     .map(e -> new FieldErrorDto(e.getField(), e.getDefaultMessage()))
                     .toList();
         }
-        return new ErrorDto("400", "Validation error", errors);
+        return new ErrorDto("400", localizedMessagesService.getMessage("errors.validation"), errors);
+    }
+
+    @ExceptionHandler(BusinessValidationException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorDto handeException(BusinessValidationException ex) {
+        log.error(ex.getMessage());
+        return new ErrorDto("422", ex.getMessage(), null);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorDto handeException(AccessDeniedException ex) {
         log.error(ex.getMessage());
-        return new ErrorDto("403", "Access denied", null);
+        return new ErrorDto("403", localizedMessagesService.getMessage("errors.access_denied"), null);
+    }
+
+    @ExceptionHandler(RequestEntityTooLargeException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorDto handeException(RequestEntityTooLargeException ex) {
+        log.error(ex.getMessage());
+        return new ErrorDto("413", localizedMessagesService.getMessage(ex.getMessage()), null);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handeException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return new ErrorDto("500", "Unexpectable error", null);
+        return new ErrorDto("500", localizedMessagesService.getMessage("errors.unexpected"), null);
     }
 }
