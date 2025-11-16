@@ -1,0 +1,18 @@
+include:
+  - docker-compose-infra.yaml
+services:
+  library-api:
+    build:
+      context: ../library
+      dockerfile: ./environment/Dockerfile.app
+    container_name: library-api
+    env_file: .env
+    ports:
+      - "8686:8686"
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - library_network
