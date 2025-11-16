@@ -10,24 +10,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.fin.library.dto.sections.SectionAdminListItemDto;
+import ru.otus.fin.library.dto.sections.SectionDictionaryDto;
+import ru.otus.fin.library.services.SectionService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sections")
+@RequestMapping("/api/v1/sections")
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Sections", description = "Methods for working with sections for user")
 @RequiredArgsConstructor
 public class SectionController {
 
+    private final SectionService sectionService;
+
     @GetMapping()
     @Operation(summary = "Get extended section info list")
-    public List<SectionAdminListItemDto> getList(
+    public List<SectionDictionaryDto> getList(
             @Parameter(description = "Section name", required = false, schema = @Schema(type = "string"))
             @RequestParam(name = "name", required = false) String name) {
-        //TODO: impl
-        return new ArrayList<>();
+
+        return sectionService.getDictionaryList(name);
     }
 }

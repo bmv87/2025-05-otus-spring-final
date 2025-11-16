@@ -6,38 +6,30 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.fin.library.dto.common.Paginated;
 import ru.otus.fin.library.dto.sections.SectionAdminListItemDto;
+import ru.otus.fin.library.services.SectionService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/sections")
+@RequestMapping("/api/v1/admin/sections")
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Sections (Admin)", description = "Methods for working with sections for admin")
 @RequiredArgsConstructor
 public class AdminSectionController {
 
+    private final SectionService sectionService;
+
     @GetMapping()
     @Operation(summary = "Get extended section info list")
-    public Paginated<SectionAdminListItemDto> getList(
+    public List<SectionAdminListItemDto> getList(
             @Parameter(description = "Section name", required = false, schema = @Schema(type = "string"))
-            @RequestParam(name = "name", required = false) String name,
-            @ParameterObject
-            @PageableDefault(
-                    page = 0,
-                    size = 20,
-                    direction = Sort.Direction.DESC,
-                    sort = SectionAdminListItemDto.Fields.name) Pageable pageable) {
-        //TODO: impl
-        return new Paginated<SectionAdminListItemDto>(List.of(), 0);
+            @RequestParam(name = "name", required = false) String name) {
+
+        return sectionService.getAdminList(name);
     }
 }

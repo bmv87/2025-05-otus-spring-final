@@ -15,13 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otus.fin.library.dto.ErrorDto;
 import ru.otus.fin.library.dto.UploadResultDto;
+import ru.otus.fin.library.services.BlobService;
 
 @RestController
-@RequestMapping("/admin/blobs")
+@RequestMapping("/api/v1/admin/blobs")
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Blobs (Admin)", description = "Methods for working with blobs for admin")
 @RequiredArgsConstructor
 public class AdminBlobController {
+
+    private final BlobService blobService;
 
     @PostMapping("")
     @Operation(summary = "Upload File",
@@ -46,8 +49,7 @@ public class AdminBlobController {
             @ParameterObject
             @RequestParam("file") MultipartFile file) {
 
-        String fileName = file.getOriginalFilename();
-        //TODO: impl
+        var fileName = blobService.upload(file);
         return new UploadResultDto(fileName);
     }
 }

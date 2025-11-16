@@ -9,86 +9,37 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.fin.library.controllers.BookFilterParams;
 import ru.otus.fin.library.dto.ErrorDto;
-import ru.otus.fin.library.dto.books.BookAdminListItemDto;
-import ru.otus.fin.library.dto.books.BookCreateDto;
-import ru.otus.fin.library.dto.books.BookDto;
-import ru.otus.fin.library.dto.common.Paginated;
-import ru.otus.fin.library.services.BookService;
+import ru.otus.fin.library.dto.links.LinkCreateDto;
+import ru.otus.fin.library.dto.links.LinkDto;
+import ru.otus.fin.library.services.BookLinkService;
+import ru.otus.fin.library.services.BookPictureService;
 
 @RestController
-@RequestMapping("/api/v1/admin/books")
+@RequestMapping("/api/v1/admin/books/{bookId}")
 @SecurityRequirement(name = "JWT")
-@Tag(name = "Books (Admin)", description = "Methods for working with books for admin")
+@Tag(name = "Books links and pictures (Admin)",
+        description = "Methods for working with books links and pictures for admin")
 @RequiredArgsConstructor
-public class AdminBookController {
+public class AdminBookLinkController {
 
-    private final BookService bookService;
+    private final BookLinkService bookLinkService;
 
-    @GetMapping()
-    @Operation(summary = "Get extended book info list")
-    public Paginated<BookAdminListItemDto> getList(
-            @RequestParam(name = "filters", required = false) BookFilterParams filters,
-            @ParameterObject
-            @PageableDefault(
-                    page = 0,
-                    size = 20,
-                    direction = Sort.Direction.DESC,
-                    sort = BookAdminListItemDto.Fields.title) Pageable pageable) {
+    private final BookPictureService bookPictureService;
 
-        return bookService.getAdminList(filters, pageable);
-    }
-
-
-    @PostMapping
-    @Operation(summary = "Create book",
+    @PostMapping("/pictures")
+    @Operation(summary = "Add picture link to book",
             responses = {
                     @ApiResponse(
                             description = "Success response", responseCode = "200",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = BookDto.class))
-                    ),
-                    @ApiResponse(
-                            description = "Validation error", responseCode = "400",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorDto.class))
-                    ),
-                    @ApiResponse(
-                            description = "Service error", responseCode = "500",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorDto.class))
-                    )
-            })
-    public BookDto create(
-            @Parameter(description = "Book create info", required = true,
-                    schema = @Schema(implementation = BookCreateDto.class))
-            @Valid @RequestBody BookCreateDto bookCreateDTO) {
-
-        return bookService.insert(bookCreateDTO);
-    }
-
-
-    @PutMapping("/{bookId}")
-    @Operation(summary = "Update book",
-            responses = {
-                    @ApiResponse(
-                            description = "Success response", responseCode = "200",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = BookDto.class))
+                                    schema = @Schema(implementation = LinkDto.class))
                     ),
                     @ApiResponse(
                             description = "Validation error", responseCode = "400",
@@ -106,19 +57,19 @@ public class AdminBookController {
                                     schema = @Schema(implementation = ErrorDto.class))
                     )
             })
-    public BookDto update(
+    public LinkDto createPictureLink(
             @Parameter(description = "Book id", required = true)
             @PathVariable Long bookId,
-            @Parameter(description = "Book update info", required = true,
-                    schema = @Schema(implementation = BookCreateDto.class))
-            @Valid @RequestBody BookCreateDto bookCreateDTO) {
+            @Parameter(description = "Link create info", required = true,
+                    schema = @Schema(implementation = LinkCreateDto.class))
+            @Valid @RequestBody LinkCreateDto linkCreateDTO) {
 
-        return bookService.update(bookId, bookCreateDTO);
+        return bookPictureService.insert(bookId, linkCreateDTO);
     }
 
 
-    @DeleteMapping("/{bookId}")
-    @Operation(summary = "Delete book",
+    @DeleteMapping("/pictures/{linkId}")
+    @Operation(summary = "Delete picture link from book",
             responses = {
                     @ApiResponse(
                             description = "Success response", responseCode = "200"
@@ -139,10 +90,79 @@ public class AdminBookController {
                                     schema = @Schema(implementation = ErrorDto.class))
                     )
             })
-    public void delete(
+    public void deletePictureLink(
             @Parameter(description = "Book id", required = true)
-            @PathVariable Long bookId) {
+            @PathVariable Long bookId,
+            @Parameter(description = "Link id", required = true)
+            @PathVariable Long linkId) {
 
-        bookService.deleteById(bookId);
+        bookPictureService.deleteFromBook(bookId, linkId);
+    }
+
+
+    @PostMapping("/links")
+    @Operation(summary = "Add links to book",
+            responses = {
+                    @ApiResponse(
+                            description = "Success response", responseCode = "200",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LinkDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Validation error", responseCode = "400",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Not found error", responseCode = "404",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Service error", responseCode = "500",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    )
+            })
+    public LinkDto createLink(
+            @Parameter(description = "Book id", required = true)
+            @PathVariable Long bookId,
+            @Parameter(description = "Link create info", required = true,
+                    schema = @Schema(implementation = LinkCreateDto.class))
+            @Valid @RequestBody LinkCreateDto linkCreateDTO) {
+
+        return bookLinkService.insert(bookId, linkCreateDTO);
+    }
+
+
+    @DeleteMapping("/links/{linkId}")
+    @Operation(summary = "Delete link from book",
+            responses = {
+                    @ApiResponse(
+                            description = "Success response", responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Validation error", responseCode = "400",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Not found error", responseCode = "404",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Service error", responseCode = "500",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    )
+            })
+    public void deleteLink(
+            @Parameter(description = "Book id", required = true)
+            @PathVariable Long bookId,
+            @Parameter(description = "Link id", required = true)
+            @PathVariable Long linkId) {
+
+        bookLinkService.deleteFromBook(bookId, linkId);
     }
 }

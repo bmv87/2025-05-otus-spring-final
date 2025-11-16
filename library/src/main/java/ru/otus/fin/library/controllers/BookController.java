@@ -20,44 +20,39 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.otus.fin.library.dto.ErrorDto;
 import ru.otus.fin.library.dto.books.BookAdminListItemDto;
 import ru.otus.fin.library.dto.books.BookDto;
-import ru.otus.fin.library.dto.books.BookWithPicturesDto;
 import ru.otus.fin.library.dto.common.Paginated;
 import ru.otus.fin.library.dto.links.LinkDto;
+import ru.otus.fin.library.services.BookLinkService;
+import ru.otus.fin.library.services.BookPictureService;
+import ru.otus.fin.library.services.BookService;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/v1/books")
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Books (Admin)", description = "Methods for view books for users")
 @RequiredArgsConstructor
 public class BookController {
 
+    private final BookService bookService;
+
+    private final BookLinkService bookLinkService;
+
+    private final BookPictureService bookPictureService;
+
     @GetMapping()
     @Operation(summary = "Get extended book info list")
     public Paginated<BookDto> getList(
-            @Parameter(description = "Book title", required = false, schema = @Schema(type = "string"))
-            @RequestParam(name = "title", required = false) String title,
-            @Parameter(description = "Book description", required = false, schema = @Schema(type = "string"))
-            @RequestParam(name = "description", required = false) String description,
-            @Parameter(description = "Book section", required = false)
-            @RequestParam(name = "section", required = false) Long section,
-            @Parameter(description = "Book author", required = false)
-            @RequestParam(name = "author", required = false) Long author,
-            @Parameter(description = "Publication year start", required = false)
-            @RequestParam(name = "yearStart", required = false) Integer yearStart,
-            @Parameter(description = "Publication year end", required = false)
-            @RequestParam(name = "yearEnd", required = false) LocalDateTime yearEnd,
+            @RequestParam(name = "filters", required = false) BookFilterParams filters,
             @ParameterObject
             @PageableDefault(
                     page = 0,
                     size = 20,
                     direction = Sort.Direction.DESC,
                     sort = BookAdminListItemDto.Fields.title) Pageable pageable) {
-        //TODO: impl
-        return new Paginated<BookDto>(List.of(), 0);
+
+        return bookService.getList(filters, pageable);
     }
 
     @GetMapping("/{bookId}")
@@ -66,7 +61,7 @@ public class BookController {
                     @ApiResponse(
                             description = "Success response", responseCode = "200",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = BookWithPicturesDto.class))
+                                    schema = @Schema(implementation = BookDto.class))
                     ),
                     @ApiResponse(
                             description = "Not found error", responseCode = "404",
@@ -79,11 +74,11 @@ public class BookController {
                                     schema = @Schema(implementation = ErrorDto.class))
                     )
             })
-    public BookWithPicturesDto getBookById(
+    public BookDto getBookById(
             @Parameter(description = "Book id", required = true)
             @PathVariable Long bookId) {
-        //TODO: impl
-        return new BookWithPicturesDto();
+
+        return bookService.findById(bookId);
     }
 
 
@@ -109,7 +104,33 @@ public class BookController {
     public List<LinkDto> getBookLinks(
             @Parameter(description = "Book id", required = true)
             @PathVariable Long bookId) {
-        //TODO: impl
-        return new ArrayList<>();
+
+        return bookLinkService.getBookLinkList(bookId);
+    }
+
+    @GetMapping("/{bookId}/pictures")
+    @Operation(summary = "Get pictures of book",
+            responses = {
+                    @ApiResponse(
+                            description = "Success response", responseCode = "200",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LinkDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Not found error", responseCode = "404",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Service error", responseCode = "500",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorDto.class))
+                    )
+            })
+    public List<LinkDto> getBookPictures(
+            @Parameter(description = "Book id", required = true)
+            @PathVariable Long bookId) {
+
+        return bookPictureService.getBookLinkList(bookId);
     }
 }

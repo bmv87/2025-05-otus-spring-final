@@ -16,24 +16,26 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.otus.fin.library.dto.ErrorDto;
 import ru.otus.fin.library.dto.authors.AuthorDictionaryDto;
 import ru.otus.fin.library.dto.authors.AuthorDto;
+import ru.otus.fin.library.services.AuthorService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/authors")
+@RequestMapping("/api/v1/authors")
 @SecurityRequirement(name = "JWT")
 @Tag(name = "Authors", description = "Methods for working with authors for user")
 @RequiredArgsConstructor
-public class AuthorsController {
+public class AuthorController {
+
+    private final AuthorService authorService;
 
     @GetMapping()
     @Operation(summary = "Get author list")
     public List<AuthorDictionaryDto> getList(
             @Parameter(description = "Author name", required = false, schema = @Schema(type = "string"))
             @RequestParam(name = "name", required = false) String name) {
-        //TODO: impl
-        return new ArrayList<>();
+
+        return authorService.getDictionaryList(name);
     }
 
     @GetMapping("/{authorId}")
@@ -58,8 +60,8 @@ public class AuthorsController {
     public AuthorDto getAuthorById(
             @Parameter(description = "Book id", required = true)
             @PathVariable Long authorId) {
-        //TODO: impl
-        return new AuthorDto();
+
+        return authorService.getById(authorId);
     }
 
 }
