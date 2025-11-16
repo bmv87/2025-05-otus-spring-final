@@ -1,7 +1,6 @@
 package ru.otus.fin.library.dto.books;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

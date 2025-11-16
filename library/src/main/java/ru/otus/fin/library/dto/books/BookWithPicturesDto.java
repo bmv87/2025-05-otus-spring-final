@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.otus.fin.library.dto.authors.AuthorDictionaryDto;
-import ru.otus.fin.library.dto.links.LinkDto;
 import ru.otus.fin.library.dto.sections.SectionDictionaryDto;
 
 import java.util.List;
@@ -28,5 +27,4 @@ public class BookWithPicturesDto {
 
     private List<SectionDictionaryDto> sections;
 
-    private List<LinkDto> pictures;
 }

@@ -17,4 +17,7 @@ public class LinkCreateDto {
 
     @NotEmpty
     private String target;
+
+    @NotEmpty
+    private String type;
 }

@@ -16,4 +16,6 @@ public class LinkDto {
     private String title;
 
     private String target;
+
+    private String type;
 }
