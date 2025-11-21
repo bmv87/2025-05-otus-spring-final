@@ -37,11 +37,15 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler()))
                 .authorizeHttpRequests(config -> {
                     config
-                            .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN)
+                            .requestMatchers("/actuator/info").permitAll()
+                            .requestMatchers("/actuator/**").permitAll()
+                            .requestMatchers("/swagger-ui/**").permitAll()
+                            .requestMatchers("/v3/api-docs/**").permitAll()
+                            .requestMatchers("/api/v1/admin/**").hasRole(ADMIN)
                             .requestMatchers(HttpMethod.GET, "/api/v1/books/{bookId}/links").hasAnyRole(ADMIN, READER)
+                            .requestMatchers(HttpMethod.GET, "/api/v1/users/current").authenticated()
                             .requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll();
                 })
-
                 .build();
     }
 
@@ -51,9 +55,7 @@ public class SecurityConfig {
         var authoritiesConverter = new JwtToDaoGrantedAuthorityConverter(userAuthorityService);
         authenticationConverter.setPrincipalClaimName(StandardClaimNames.PREFERRED_USERNAME);
         authoritiesConverter.setPrincipalClaimName(StandardClaimNames.PREFERRED_USERNAME);
-        authenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            return authoritiesConverter.convert(jwt);
-        });
+        authenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
         return authenticationConverter;
     }
 

@@ -38,8 +38,10 @@ public class BookMapper {
         book.setTitle(entity.getTitle());
         book.setDescription(entity.getDescription());
         book.setPublicationYear(entity.getPublicationYear());
-        book.setSections(sectionMapper.mapToDictionaryListDto(entity.getSections()));
-        book.setAuthors(authorMapper.mapToDictionaryListDto(entity.getAuthors()));
+        var section = sectionMapper.mapToDictionaryListDto(entity.getSections());
+        book.setSections(section);
+        var authors = authorMapper.mapToDictionaryListDto(entity.getAuthors());
+        book.setAuthors(authors);
 
         return book;
     }
@@ -50,8 +52,10 @@ public class BookMapper {
         book.setTitle(entity.getTitle());
         book.setDescription(entity.getDescription());
         book.setPublicationYear(entity.getPublicationYear());
-        book.setSections(sectionMapper.mapToDictionaryListDto(entity.getSections()));
-        book.setAuthors(authorMapper.mapToDictionaryListDto(entity.getAuthors()));
+        var section = sectionMapper.mapToDictionaryListDto(entity.getSections());
+        book.setSections(section);
+        var authors = authorMapper.mapToDictionaryListDto(entity.getAuthors());
+        book.setAuthors(authors);
         book.setCreatedBy(entity.getCreatedBy().getFullName());
 
         return book;

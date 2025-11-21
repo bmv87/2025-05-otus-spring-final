@@ -52,6 +52,7 @@ public class BookServiceImpl implements BookService {
         var book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         localizedMessagesService.getMessage("errors.book_not_found", id)));
+        //https://struchkov.dev/blog/ru/hibernate-multiple-bag-fetch-exception/?ysclid=mi28zj7ccc96601111
         return bookMapper.mapToDto(book);
     }
 
@@ -161,12 +162,11 @@ public class BookServiceImpl implements BookService {
 
     private UserEntity tryGetCurrentUserEntity() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        var user = userRepository.findByUsername(auth.getName());
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException(
-                    localizedMessagesService.getMessage("errors.user_not_found",
-                            auth.getName()));
-        }
-        return user.get();
+        var user = userRepository.findByUsername(auth.getName())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        localizedMessagesService.getMessage("errors.user_not_found",
+                                auth.getName())));
+
+        return user;
     }
 }

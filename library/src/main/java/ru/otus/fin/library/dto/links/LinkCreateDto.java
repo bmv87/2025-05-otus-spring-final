@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @Schema
 public class LinkCreateDto {
 
-    @NotEmpty
+    @NotEmpty(message = "{errors.fields.required}")
     private String title;
 
-    @NotEmpty
+    @NotEmpty(message = "{errors.fields.required}")
     private String target;
 
-    @NotEmpty
+    @NotEmpty(message = "{errors.fields.required}")
     private String type;
 }

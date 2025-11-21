@@ -35,7 +35,6 @@ import java.util.List;
         @NamedEntityGraph(name = "books-authors-sections-entity-graph",
                 attributeNodes = {
                         @NamedAttributeNode("authors"),
-                        @NamedAttributeNode("sections"),
                 }),
 })
 @FieldNameConstants
@@ -60,7 +59,7 @@ public class Book {
     private UserEntity createdBy;
 
     @BatchSize(size = 20)
-    @ManyToMany(targetEntity = Section.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Author.class, fetch = FetchType.LAZY)
     @JoinTable(name = "books_authors",
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"))

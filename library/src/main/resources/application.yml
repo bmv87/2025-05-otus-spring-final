@@ -11,6 +11,9 @@ spring:
     url: jdbc:postgresql://localhost:5455/library
     username: postgres
     password: postgres
+    hikari:
+      minimumIdle: 2
+      maximumPoolSize: 4
   sql:
     init:
       mode: never
@@ -41,11 +44,15 @@ spring:
           client-id: otus_library
           client-secret: r2bQaOxF6jKMlvPYVLWvMt2llY69bP26
           authorization-grant-type: authorization_code
-          scope: openid-connect
+          # scope: openid-connect
       provider:
         keycloak:
           issuer-uri: http://localhost:5443/realms/library
           user-name-attribute: preferred_username
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
 logging:
   logging:
     level:
@@ -67,5 +74,37 @@ minio:
   image-size: 10485760
   file-size: 104857600
 
+management:
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+      show-details: never
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health,info
+  info:
+    # Включает информацию о сборке (spring-boot-maven-plugin)
+    build:
+      enabled: true
+    # Включает информацию о приложении из application.yml
+    env:
+      enabled: true
+    # Включает информацию о git (git-commit-id-plugin)
+    git:
+      mode: "full"
+info:
+  app:
+    version: @project.version@
+    description: On-line library
 
+swagger:
+  enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
 

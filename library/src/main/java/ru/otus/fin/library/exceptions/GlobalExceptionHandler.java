@@ -2,6 +2,7 @@ package ru.otus.fin.library.exceptions;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
@@ -57,11 +58,11 @@ public class GlobalExceptionHandler {
         return new ErrorDto("403", localizedMessagesService.getMessage("errors.access_denied"), null);
     }
 
-    @ExceptionHandler(RequestEntityTooLargeException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorDto handeException(RequestEntityTooLargeException ex) {
+    @ExceptionHandler(value = {FileSizeLimitExceededException.class, RequestEntityTooLargeException.class})
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+    public ErrorDto handeException(FileSizeLimitExceededException ex) {
         log.error(ex.getMessage());
-        return new ErrorDto("413", localizedMessagesService.getMessage(ex.getMessage()), null);
+        return new ErrorDto("413", localizedMessagesService.getMessage("errors.max_file_size"), null);
     }
 
     @ExceptionHandler(Exception.class)

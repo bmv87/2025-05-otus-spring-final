@@ -1,2 +1,0 @@
-cors:
-  urls: ${CORS_URLS}

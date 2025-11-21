@@ -30,6 +30,7 @@ public class AuthorMapper {
         var author = new AuthorAdminListItemDto();
         author.setId(entity.getId());
         author.setFullName(entity.getFullName());
+        author.setDescription(entity.getDescription());
         author.setCreatedBy(entity.getCreatedBy().getFullName());
         return author;
     }

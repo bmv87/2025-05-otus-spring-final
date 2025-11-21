@@ -15,18 +15,18 @@ import java.util.List;
 @Schema
 public class BookCreateDto {
 
-    @NotEmpty
+    @NotEmpty(message = "{errors.fields.required}")
     private String title;
 
-    @NotEmpty
+    @NotEmpty(message = "{errors.fields.required}")
     private String description;
 
-    @NotNull
+    @NotNull(message = "{errors.fields.required}")
     private Integer publicationYear;
 
-    @NotEmpty
+    @NotEmpty(message = "{errors.fields.empty_list}")
     private List<@NotNull Long> authors;
 
-    @NotEmpty
+    @NotEmpty(message = "{errors.fields.empty_list}")
     private List<@NotNull Long> sections;
 }

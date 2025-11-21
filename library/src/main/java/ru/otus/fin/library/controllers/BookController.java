@@ -13,9 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.fin.library.dto.ErrorDto;
 import ru.otus.fin.library.dto.books.BookAdminListItemDto;
@@ -44,7 +44,7 @@ public class BookController {
     @GetMapping()
     @Operation(summary = "Get extended book info list")
     public Paginated<BookDto> getList(
-            @RequestParam(name = "filters", required = false) BookFilterParams filters,
+            @ModelAttribute BookFilterParams filters,
             @ParameterObject
             @PageableDefault(
                     page = 0,

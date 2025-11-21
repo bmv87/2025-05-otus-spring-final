@@ -24,13 +24,17 @@ public class MinioBlobService implements BlobService {
 
     private final MinioProperties minioProperties;
 
+    private final LocalizedMessagesService localizedMessagesService;
+
     @SneakyThrows
     public String upload(MultipartFile multipartFile) {
         String extension = FileNameUtils.getExtension(multipartFile.getOriginalFilename());
-        String fileName = UUID.randomUUID().toString() + "." + extension;
+        String fileName = UUID.randomUUID() + "." + extension;
         var size = multipartFile.getSize();
+        var sizeMb = size / (1024 * 2);
         if (size > minioProperties.getFileSize()) {
-            throw new RequestEntityTooLargeException("errors.max_file_size");
+            throw new RequestEntityTooLargeException(
+                    localizedMessagesService.getMessage("errors.max_file_size", sizeMb));
         }
         minioClient.putObject(
                 PutObjectArgs.builder()

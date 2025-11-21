@@ -10,8 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema
 public class UserInfoDto {
-
-    private String firstName;
-
-    private String lastName;
+    private String fullName;
 }
