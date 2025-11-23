@@ -1,0 +1,26 @@
+# Exclude node_modules as they will be installed inside the container
+node_modules
+# Exclude temporary files
+*.log
+ 
+# Exclude local configurations
+.env.development
+ 
+# Exclude test data and results
+coverage
+*.test.js
+*.spec.js
+ 
+# Exclude editor files and directories
+.vscode
+.idea
+ 
+# Exclude logs and cache
+logs
+*.log
+.cache
+ 
+# Exclude other unnecessary files and directories
+tmp
+dist
+build
