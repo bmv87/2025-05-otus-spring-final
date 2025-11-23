@@ -132,7 +132,8 @@ public class BookServiceImpl implements BookService {
 
     private void validate(BookCreateDto bookDto) {
         if (bookDto.getPublicationYear() > LocalDate.now().getYear()) {
-            throw new BusinessValidationException("errors.wrong_year_value");
+            throw new BusinessValidationException(
+                    localizedMessagesService.getMessage("errors.wrong_year_value"));
         }
     }
 

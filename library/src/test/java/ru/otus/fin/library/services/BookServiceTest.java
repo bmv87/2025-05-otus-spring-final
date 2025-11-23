@@ -20,10 +20,7 @@ import ru.otus.fin.library.entities.Book;
 import ru.otus.fin.library.entities.Section;
 import ru.otus.fin.library.exceptions.BusinessValidationException;
 import ru.otus.fin.library.fixture.EntityGenerator;
-import ru.otus.fin.library.mappers.AuthorMapper;
 import ru.otus.fin.library.mappers.BookMapper;
-import ru.otus.fin.library.mappers.SectionMapper;
-import ru.otus.fin.library.repositories.AuthorRepository;
 
 import java.util.List;
 
@@ -34,9 +31,9 @@ import static ru.otus.fin.library.security.AuthorityConstants.READER;
 
 @DisplayName("Сервис для работы с книгами")
 @SpringBootTest(
-        classes = {BookMapper.class, AuthorMapper.class,
-                SectionMapper.class, BookServiceImpl.class,
-                AuthorRepository.class, LibraryApplication.class}
+        classes = {
+                BookMapper.class, BookServiceImpl.class, LibraryApplication.class
+        }
 )
 @Transactional(propagation = Propagation.NEVER)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)

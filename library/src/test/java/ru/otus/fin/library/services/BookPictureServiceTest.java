@@ -24,7 +24,8 @@ import static ru.otus.fin.library.security.AuthorityConstants.READER;
 @DisplayName("Сервис для работы с ссылками на картинки книг")
 @SpringBootTest(
         classes = {
-                LinkMapper.class, BookPictureServiceImpl.class, LibraryApplication.class}
+                LinkMapper.class, BookPictureServiceImpl.class, LibraryApplication.class
+        }
 )
 @Transactional(propagation = Propagation.NEVER)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
