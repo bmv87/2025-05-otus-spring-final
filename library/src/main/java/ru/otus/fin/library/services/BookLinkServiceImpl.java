@@ -1,6 +1,7 @@
 package ru.otus.fin.library.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.otus.fin.library.dto.links.LinkCreateDto;
@@ -29,6 +30,7 @@ public class BookLinkServiceImpl implements BookLinkService {
     private final LocalizedMessagesService localizedMessagesService;
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public LinkDto insert(Long bookId, LinkCreateDto linkCreateDTO) {
         try {
             var link = linkMapper.mapToLinkEntity(linkCreateDTO);
@@ -47,6 +49,7 @@ public class BookLinkServiceImpl implements BookLinkService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteFromBook(Long bookId, Long linkId) {
         if (!bookLinkRepository.existsByIdAndBookId(linkId, bookId)) {
             throw new EntityNotFoundException(

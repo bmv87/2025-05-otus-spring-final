@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,14 @@ import java.util.List;
 @NamedEntityGraphs({
         @NamedEntityGraph(name = "books-authors-sections-entity-graph",
                 attributeNodes = {
-                        @NamedAttributeNode("authors"),
+                        @NamedAttributeNode(value = Book.Fields.authors, subgraph = "authorSubgraph"),
+                },
+                subgraphs = {
+                        @NamedSubgraph(name = "authorSubgraph", attributeNodes = {
+                                @NamedAttributeNode(value = Author.Fields.id),
+                                @NamedAttributeNode(value = Author.Fields.fullName),
+                                @NamedAttributeNode(value = Author.Fields.description),
+                        })
                 }),
 })
 @FieldNameConstants

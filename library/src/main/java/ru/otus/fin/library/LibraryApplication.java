@@ -8,8 +8,8 @@ public class LibraryApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(LibraryApplication.class, args);
-        System.out.printf("Чтобы перейти на страницу сайта открывай: %n%s%n",
-                "http://localhost:8686");
+        System.out.printf("Адрес api: %n%s%n",
+                "http://localhost:8686/api/v1");
 
     }
 

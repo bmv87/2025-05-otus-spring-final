@@ -1,6 +1,7 @@
 package ru.otus.fin.library.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.otus.fin.library.dto.authors.AuthorAdminListItemDto;
@@ -10,7 +11,6 @@ import ru.otus.fin.library.entities.Author;
 import ru.otus.fin.library.exceptions.EntityNotFoundException;
 import ru.otus.fin.library.mappers.AuthorMapper;
 import ru.otus.fin.library.repositories.AuthorRepository;
-import ru.otus.fin.library.repositories.UserRepository;
 
 import java.util.List;
 
@@ -22,11 +22,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorMapper authorMapper;
 
-    private final UserRepository userRepository;
-
     private final LocalizedMessagesService localizedMessagesService;
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AuthorAdminListItemDto> getAdminList(String name) {
         List<Author> authors = findAllOrByName(name);
         return authorMapper.mapToAdminListDto(authors);

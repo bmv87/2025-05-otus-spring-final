@@ -3,6 +3,7 @@ package ru.otus.fin.library.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +68,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Paginated<BookAdminListItemDto> getAdminList(BookFilterParams filters, Pageable pageable) {
         var spec = getBookListSpecification(filters);
         var listPage = bookRepository.findAll(spec, pageable);
@@ -76,6 +78,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public BookDto insert(BookCreateDto bookDto) {
         validate(bookDto);
         var book = bookMapper.mapToEntity(bookDto);
@@ -86,6 +89,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public BookDto update(long id, BookCreateDto bookDto) {
         var book = bookRepository.findById(id)
                 .orElseThrow(() ->
@@ -100,6 +104,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteById(long id) {
         bookRepository.deleteById(id);
     }

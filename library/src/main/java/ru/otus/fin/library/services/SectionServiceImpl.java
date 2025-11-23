@@ -1,6 +1,7 @@
 package ru.otus.fin.library.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.otus.fin.library.dto.sections.SectionAdminListItemDto;
@@ -20,6 +21,7 @@ public class SectionServiceImpl implements SectionService {
     private final SectionMapper sectionMapper;
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<SectionAdminListItemDto> getAdminList(String name) {
         List<Section> authors = findAllOrByName(name);
         return sectionMapper.mapToAdminListDto(authors);

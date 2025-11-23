@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otus.fin.library.config.MinioProperties;
@@ -27,6 +28,7 @@ public class MinioBlobService implements BlobService {
     private final LocalizedMessagesService localizedMessagesService;
 
     @SneakyThrows
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String upload(MultipartFile multipartFile) {
         String extension = FileNameUtils.getExtension(multipartFile.getOriginalFilename());
         String fileName = UUID.randomUUID() + "." + extension;

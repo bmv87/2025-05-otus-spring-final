@@ -16,7 +16,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     @EntityGraph(value = "books-authors-sections-entity-graph")
     Optional<Book> findById(Long id);
 
-    @EntityGraph(value = "books-authors-sections-entity-graph")
     Page<Book> findAll(Specification<Book> spec, Pageable pageable);
 }
 

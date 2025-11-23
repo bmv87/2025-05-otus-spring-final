@@ -1,6 +1,7 @@
 package ru.otus.fin.library.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ public class BookPictureServiceImpl implements BookPictureService {
 
     @Transactional
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public LinkDto insert(Long bookId, LinkCreateDto linkCreateDTO) {
         try {
             var link = linkMapper.mapToPictureEntity(linkCreateDTO);
@@ -49,6 +51,7 @@ public class BookPictureServiceImpl implements BookPictureService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteFromBook(Long bookId, Long linkId) {
         if (!bookPictureRepository.existsByIdAndBookId(linkId, bookId)) {
             throw new EntityNotFoundException(
