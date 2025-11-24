@@ -1,6 +1,7 @@
 package ru.otus.fin.library.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import java.util.Collections;
 
 @Configuration
 @RequiredArgsConstructor
+@Log4j2
 public class AppConfig implements WebMvcConfigurer {
 
     @Autowired
@@ -31,6 +33,7 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        log.warn("Allowed Origins: {}", allowedOrigins);
         registry.addMapping("/api/v1/**")
                 .allowedMethods("*")
                 .allowedHeaders("*")

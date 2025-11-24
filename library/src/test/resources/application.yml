@@ -16,17 +16,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:5443/realms/library
-    client:
-      registration:
-        keycloak:
-          client-id: test
-          client-secret: test
-          authorization-grant-type: authorization_code
-          # scope: openid-connect
-      provider:
-        keycloak:
-          issuer-uri: http://localhost:5443/realms/library
-          user-name-attribute: preferred_username
 logging:
   file:
     name: ../logs/hw_test.log

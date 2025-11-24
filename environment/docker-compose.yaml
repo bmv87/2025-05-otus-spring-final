@@ -4,9 +4,9 @@ services:
   library-api:
     build:
       context: ..
-      dockerfile: Dockerfile.app
+      dockerfile: ./environment/Dockerfile.app
     container_name: library-api
-    env_file: .env
+    env_file: ./.env
     ports:
       - "8686:8686"
     healthcheck:
@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile.ui
     container_name: library-ui
     ports:
-      - "3000:80"
+      - "3000:8090"
     healthcheck:
       test: [ "CMD", "curl", "-fk",  "http://localhost:80/actuator/health" ]
       interval: 30s

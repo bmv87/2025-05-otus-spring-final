@@ -8,9 +8,9 @@ spring:
       default-media-type: application/json
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5455/library
-    username: postgres
-    password: postgres
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5455/library}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     hikari:
       minimumIdle: 2
       maximumPoolSize: 4
@@ -37,18 +37,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:5443/realms/library
-    client:
-      registration:
-        keycloak:
-          client-id: otus_library
-          client-secret: r2bQaOxF6jKMlvPYVLWvMt2llY69bP26
-          authorization-grant-type: authorization_code
-          # scope: openid-connect
-      provider:
-        keycloak:
-          issuer-uri: http://localhost:5443/realms/library
-          user-name-attribute: preferred_username
+          issuer-uri: ${SECURITY_OAUTH2_ISSUER_URI:http://localhost:5443/realms/library}
+          jwk-set-uri: ${SECURITY_OAUTH2_JWK_SET_URI:http://host.docker.internal:5443/realms/library/protocol/openid-connect/certs}
   servlet:
     multipart:
       max-request-size: 100MB
@@ -57,20 +47,25 @@ logging:
   logging:
     level:
       root: debug
+      ru:
+        otus:
+          fin:
+            library:
+              config: debug
   file:
     name: ../logs/hw.log
 
 cors:
-  urls: http://localhost:3000
+  urls: ${CORS_URLS:http://localhost:3000}
 
 defaults:
   locale: ru-RU
 
 minio:
-  url: http://localhost:9000
-  access-key: admin
-  secret-key: admin123
-  bucket-name: library
+  url: ${MINIO_URL:http://localhost:9000}
+  access-key: ${MINIO_ACCESSKEY:admin}
+  secret-key: ${MINIO_SECRETKEY:admin123}
+  bucket-name: ${MINIO_BUCKETNAME:library}
   image-size: 10485760
   file-size: 104857600
 
