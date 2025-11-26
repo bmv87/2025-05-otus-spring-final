@@ -9,6 +9,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import ru.otus.fin.library.dto.ErrorDto;
 import ru.otus.fin.library.dto.FieldErrorDto;
 import ru.otus.fin.library.services.LocalizedMessagesService;
@@ -58,7 +59,7 @@ public class GlobalExceptionHandler {
         return new ErrorDto("403", localizedMessagesService.getMessage("errors.access_denied"), null);
     }
 
-    @ExceptionHandler(value = {FileSizeLimitExceededException.class, RequestEntityTooLargeException.class})
+    @ExceptionHandler(value = {FileSizeLimitExceededException.class, RequestEntityTooLargeException.class, MaxUploadSizeExceededException.class})
     @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
     public ErrorDto handeException(FileSizeLimitExceededException ex) {
         log.error(ex.getMessage());

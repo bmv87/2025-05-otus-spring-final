@@ -111,7 +111,7 @@ public class BookServiceImpl implements BookService {
 
     private void fillLinkedEntities(Book book, BookCreateDto bookDto) {
         var authors = authorRepository.findAllById(bookDto.getAuthors());
-        if (isEmpty(authors) || bookDto.getSections().size() != authors.size()) {
+        if (isEmpty(authors) || bookDto.getAuthors().size() != authors.size()) {
             throw new EntityNotFoundException(
                     localizedMessagesService.getMessage("errors.some_authors_not_found",
                             bookDto.getSections()));

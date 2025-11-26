@@ -41,8 +41,8 @@ spring:
           jwk-set-uri: ${SECURITY_OAUTH2_JWK_SET_URI:http://host.docker.internal:5443/realms/library/protocol/openid-connect/certs}
   servlet:
     multipart:
-      max-request-size: 100MB
-      max-file-size: 100MB
+      max-request-size: 500MB
+      max-file-size: 500MB
 logging:
   logging:
     level:
