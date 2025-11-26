@@ -59,7 +59,8 @@ public class GlobalExceptionHandler {
         return new ErrorDto("403", localizedMessagesService.getMessage("errors.access_denied"), null);
     }
 
-    @ExceptionHandler(value = {FileSizeLimitExceededException.class, RequestEntityTooLargeException.class, MaxUploadSizeExceededException.class})
+    @ExceptionHandler(value = {FileSizeLimitExceededException.class, RequestEntityTooLargeException.class,
+            MaxUploadSizeExceededException.class})
     @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
     public ErrorDto handeException(FileSizeLimitExceededException ex) {
         log.error(ex.getMessage());
