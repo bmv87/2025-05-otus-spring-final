@@ -1,0 +1,38 @@
+include:
+  - docker-compose-infra.yaml
+services:
+  library-api:
+    build:
+      context: ..
+      dockerfile: ./environment/Dockerfile.app
+    container_name: library-api
+    env_file: ./.env
+    ports:
+      - "8686:8686"
+    healthcheck:
+      test: [ "CMD", "curl", "-f",  "http://localhost:8686/actuator/health" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - library_network
+  
+  library-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    container_name: library-ui
+    ports:
+      - "3000:8090"
+    healthcheck:
+      test: [ "CMD", "curl", "-fk",  "http://localhost:80/actuator/health" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - library_network

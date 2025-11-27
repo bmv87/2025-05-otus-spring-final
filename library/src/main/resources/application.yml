@@ -1,0 +1,105 @@
+server:
+  port: 8686
+spring:
+  application:
+    name: library
+  data:
+    rest:
+      default-media-type: application/json
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5455/library}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    hikari:
+      minimumIdle: 2
+      maximumPoolSize: 4
+  sql:
+    init:
+      mode: never
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration,classpath:db/data
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  messages:
+    baseName: messages
+    encoding: UTF-8
+    fallbackToSystemLocale: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SECURITY_OAUTH2_ISSUER_URI:http://localhost:5443/realms/library}
+          jwk-set-uri: ${SECURITY_OAUTH2_JWK_SET_URI:http://host.docker.internal:5443/realms/library/protocol/openid-connect/certs}
+  servlet:
+    multipart:
+      max-request-size: 500MB
+      max-file-size: 500MB
+logging:
+  logging:
+    level:
+      root: debug
+      ru:
+        otus:
+          fin:
+            library:
+              config: debug
+  file:
+    name: ../logs/hw.log
+
+cors:
+  urls: ${CORS_URLS:http://localhost:3000}
+
+defaults:
+  locale: ru-RU
+
+minio:
+  url: ${MINIO_URL:http://localhost:9000}
+  access-key: ${MINIO_ACCESSKEY:admin}
+  secret-key: ${MINIO_SECRETKEY:admin123}
+  bucket-name: ${MINIO_BUCKETNAME:library}
+  image-size: 10485760
+  file-size: 104857600
+
+management:
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+      show-details: never
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: health,info
+  info:
+    # Включает информацию о сборке (spring-boot-maven-plugin)
+    build:
+      enabled: true
+    # Включает информацию о приложении из application.yml
+    env:
+      enabled: true
+    # Включает информацию о git (git-commit-id-plugin)
+    git:
+      mode: "full"
+info:
+  app:
+    version: @project.version@
+    description: On-line library
+
+swagger:
+  enabled: false
+
+springdoc:
+  api-docs:
+    enabled: true
+
